@@ -20,13 +20,14 @@ import { getNewNodeId, validateFlow, isDuplicateEdgeStart } from "../util";
 
 import SidePanel from "./SidePanel";
 import { toast } from "sonner";
+
 export default function FlowBuilder() {
   const reactFlow = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes as Node[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [activeNode, setActiveNode] = useState<Node | null>(null);
 
-  // validate & Handle connections between nodes
+  // Validate and handle connections between nodes
   const onConnect: OnConnect = (connection) => {
     // Avoid duplicate edges starting from the same node
     if (isDuplicateEdgeStart(edges, connection)) {
@@ -39,15 +40,17 @@ export default function FlowBuilder() {
     };
     setEdges((prevEdges) => addEdge(edge, prevEdges));
   };
+
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
+
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
 
     const type = event.dataTransfer.getData("application/reactflow");
-    if (!type || (type !== "message" && type !== "dropDown")) {
+    if (!type || !["message", "dropDown", "carousel"].includes(type)) {
       return;
     }
 
@@ -55,16 +58,22 @@ export default function FlowBuilder() {
       x: event.clientX,
       y: event.clientY,
     });
+
     const newNode: Node = {
       id: getNewNodeId(nodes),
       type,
       position,
-      data: type === "message" ? { message: "" } : { options: [] },
+      data: type === "message" 
+        ? { message: "" } 
+        : type === "dropDown" 
+        ? { options: [] }
+        : { images: [], description: "" }, // Add default data for carousel
     };
 
     setNodes((prevNodes) => [...prevNodes, newNode]);
     setActiveNode(newNode);
   };
+
   const saveFlow = () => {
     const isFlowValid = validateFlow(nodes, edges);
     if (!isFlowValid) {

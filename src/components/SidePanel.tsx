@@ -15,7 +15,7 @@ export default function SidePanel({
 }: ActiveNodeProps) {
   const reactFlow = useReactFlow();
 
-  // This will get triggered on selection change of item (node, edge) on the viewport
+  // Triggered on selection change (node/edge) in the viewport
   useOnSelectionChange({
     onChange: ({ nodes, edges }) => {
       if (!isValidUniqueSelection({ nodes, edges })) {
@@ -26,10 +26,7 @@ export default function SidePanel({
     },
   });
 
-  /*
-    This will get triggered on change of viewport selection,
-    we can use this to identify if the user has clicked on the viewport to deselect the node
-  */
+  // Triggered when the viewport changes (e.g., clicking outside a node)
   useOnViewportChange({
     onStart: (viewport: Viewport) => {
       console.log("viewport", viewport);
@@ -37,7 +34,7 @@ export default function SidePanel({
     },
   });
 
-  // Update the node in the react flow
+  // Update the node data in React Flow when `activeNode` changes
   useEffect(() => {
     if (!activeNode) return;
 
@@ -64,7 +61,7 @@ export default function SidePanel({
           </button>
         )}
         <h1 className="text-lg font-semibold text-red-500">
-          {activeNode ? "Edit Node" : "Nodes"}
+          {activeNode ? `Edit ${activeNode.type.charAt(0).toUpperCase() + activeNode.type.slice(1)} Node` : "Nodes"}
         </h1>
       </header>
 

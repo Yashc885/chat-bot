@@ -1,7 +1,6 @@
 import React from "react";
 import { nodeTypes } from "../nodes";
 
-// Main container for the draggable node cards
 export default function NodesHousing() {
   return (
     <div className="flex gap-3 flex-wrap">
@@ -12,14 +11,12 @@ export default function NodesHousing() {
   );
 }
 
-// NodeCard component to handle each draggable node
 function NodeCard({ nodeType }: { nodeType: string }) {
-  // Fired when dragging starts
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string
   ) => {
-    // Update the data to be transferred so we can recognize the type of node being dragged
+    console.log(`Dragging node type: ${nodeType}`); // Debugging
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
@@ -32,12 +29,12 @@ function NodeCard({ nodeType }: { nodeType: string }) {
     >
       <img
         className="w-6"
-        src={`/${nodeType.toLowerCase()}.png`} // Assuming images are stored with the name matching node type
+        src={`/${nodeType.toLowerCase()}.png`}
         alt={nodeType}
-        draggable={false} // Prevent dragging the image
+        draggable={false}
       />
       <p className="text-sm text-red-500">
-        {nodeType.charAt(0).toUpperCase() + nodeType.slice(1)} {/* Capitalize first letter */}
+        {nodeType.charAt(0).toUpperCase() + nodeType.slice(1)}
       </p>
     </div>
   );
